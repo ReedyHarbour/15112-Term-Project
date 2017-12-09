@@ -45,11 +45,12 @@ def labelLegalPawnMove(boardGame):
 				continue
 			result.append((x,y-1,dZ))
 	# Check if the move is legal
-	for i in range(availMove):
-		for dZ in range(8):
+	for dZ in range(8):
+		for i in range(availMove):
 			if boardGame.pieceList[x+dX*(i+1)][y][dZ] != None:
-				continue
-			result.append((x+dX*(i+1),y,dZ))
+				break
+			else:
+				result.append((x+dX*(i+1),y,dZ))
 	for move in [-1,+1]:
 		for dZ in range(8):
 			if y+move >= 0 and y+move < 6:
@@ -214,10 +215,8 @@ def makeMove(board, oldPosi, newPosi):
 def labelLegalBoard(boardGame):
 	(x,y,z) = boardGame.currLabel
 	legalList = []
-	dList = [(1,1),(1,4),(4,1),(4,4)]
-	for dZ in [2,4,6]:
-		for (dX, dY) in dList:
-			if abs(dY-y) <= 1 and boardGame.board.board[dX][dY][dZ+1] == False:
-				legalList.append((dX+dZ-2, dY, dZ))
+	dList = [(1,1,2),(1,4,2),(4,1,2),(4,4,2),(3,1,4),(3,4,4),(6,1,4),(6,4,4),(5,1,6),(5,4,6),(8,1,6),(8,4,6)]
+	for (dX,dY,dZ) in dList:
+		if abs(dY-y) <= 1 and boardGame.board.board[dX][dY][dZ+1] == False:
+			legalList.append((dX, dY, dZ))
 	return legalList
-

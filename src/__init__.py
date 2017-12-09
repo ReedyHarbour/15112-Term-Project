@@ -552,12 +552,12 @@ class ChessGame(ShowBase):
 			self.prevLabel = self.currLabel
 			self.prevPossMove = self.possibleMove
 		else:
-			self.count = 0
 			self.undoHighLight()
 			self.currSquare = self.getSquare()
 			(x,y,z) = self.currLabel
 			# Check whether this move is selecting board or moving board
 			if self.prevBoard == None:
+				self.count = 0
 				if z%2 == 0 or self.getPiece() != None:
 					self.printList.append("You cannot move this board!")
 				else:
@@ -605,7 +605,7 @@ class ChessGame(ShowBase):
 			# Select the initial square as the bottom left one
 			if cY == 1:
 				cY -= 1
-			if cX < pX:
+			if cX%2 == 1:
 				cX -= 1
 			cZ += 1
 			squareList = [(cX,cY,cZ),(cX,cY+1,cZ),(cX+1,cY,cZ),(cX+1,cY+1,cZ)]
@@ -704,7 +704,17 @@ class ChessGame(ShowBase):
 												font=self.font, parent=self.playFrame,
 											  	pos=(1.55, posi), scale = .045))
 				posi -= .05
-
+			self.currKing = None
+			for x in range(len(self.board.board)):
+				for y in range(len(self.board.board[0])):
+					for z in range(len(self.board.board[0][0])):
+						if (self.pieceList[x][y][z] != None and
+						self.pieceList[x][y][z].model.split("/")[1] == "king" and
+						int(self.pieceList[x][y][z].colorR) == self.currPlayer):
+							self.currKing = (x,y,z)
+			if self.currKing == None:
+				self.endGame()
+			self.currKing = None
 			if self.currPlayer:
 				currPlayer = "White"
 				if self.mode == 1:
